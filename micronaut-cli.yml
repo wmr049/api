@@ -1,0 +1,5 @@
+profile: service
+defaultPackage: br.com.kroton
+---
+testFramework: spock
+sourceLanguage: groovy

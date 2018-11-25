@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Kroton SC - Software Center</title>
+
+    <style type="text/css">
+        .col-sm img {
+            width: 100%;
+        }
+    </style>
+    <script type="text/javascript">
+        function navBar(currentPage) {
+            var html = "<ul class='navbar-nav'>";
+            html += ( currentPage == 'home' ) ? activeNavBarItem('home') : navBarItem('home');
+            html += "</ul>";
+            return html;
+        }
+        function activeNavBarItem(item) {
+            var html = "<li class='nav-item'>";
+            html += "<a class='nav-link' href='"+ hrefByNavBar(item) + "'>";
+            html += titleByNavbar(item);
+            html += "<span class='sr-only'>(current)</span>";
+            html += "</a>";
+            html += "</li>";
+            return html;
+        }
+        function navBarItem(item) {
+            var html = "<li class='nav-item active'>";
+            html += "<a class='nav-link' href='"+ hrefByNavBar(item) + "'>"+titleByNavbar(item)+"</a>";
+            html += "</li>";
+            return html;
+        }
+        function hrefByNavBar(item) {
+            return 'javascript:refreshPage("'+item+'","")';
+        }
+        function titleByNavbar(item) {
+            if ( item === 'home' ) {
+                return 'Home';
+            }
+        }
+        function refreshPage(menu,item) {
+            refreshNavbarNav(menu)
+            refreshContainer(menu,item)
+        }
+
+        function alertMessage(msg) {
+            var html = "<div class='alert alert-warning alert-dismissible fade show' role='alert'>";
+            html += msg;
+            html += "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>";
+            html += "<span aria-hidden='true'>&times;</span>";
+            html += "</button>";
+            html += "</div>";
+            return html;
+        }
+
+        function successMessage(msg) {
+            var html = "<div class='alert alert-success alert-dismissible fade show' role='alert'>";
+            html += msg;
+            html += "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>";
+            html += "<span aria-hidden='true'>&times;</span>";
+            html += "</button>";
+            html += "</div>";
+            return html;
+        }
+
+
+        function loadMailForm(slug) {
+            var mailHealthAPI = url + 'mail/health';
+            $.getJSON( mailHealthAPI, {
+                format: "json"
+            }).done(function( data ) {
+                console.log(data);
+                if ( data === 'UP' ) {
+                    var html = renderMailForm(slug);
+                    $( "#container" ).append(html);
+                } else {
+                    console.log('mail is down');
+                }
+            }).fail(function( jqxhr, textStatus, error ) {
+                console.log('mail is down');
+            });
+        }
+
+
+        function renderMailForm(slug) {
+            var html = "<div class='clearfix'>";
+            html += "<div class='jumbotron' id='mailBox'>";
+            html += "<p>";
+            html += "<b>Solicite Informação sobre o Kroton SC </b>";
+            html += "</p>"
+            html += "<div class='form-group'>";
+            html += "<input type='hidden' name='slug' id='inputSlug' value='"+slug+"'/>";
+            html += "<label for='inputEmail'>E-mail</label>";
+            html += "<input type='email' class='form-control' name='email' id='inputEmail' aria-describedby='emailHelp' placeholder='Digite seu email'/>";
+            html += "<small id='emailHelp' class='form-text text-muted'>Nós nunca vamos compartilhar seu e-mail com mais ninguém.</b></small>";
+            html += "</div>";
+            html += "<button onclick='javascript:submitMailForm();' class='btn btn-primary'>Envie-me informações</button>";
+            html += "</div>";
+            html += "</div>";
+            return html;
+        }
+
+
+        function submitMailForm() {
+            var slug = $('#inputSlug').val();
+            var email = $('#inputEmail').val();
+            if ( email != '' ) {
+                console.log('submitting form' + slug + " email: " + email);
+                var mailSendAPI = url + "mail/send?email=" + email ;
+                $.post(
+                    mailSendAPI,
+                    function(data) {
+                        $( "#mailBox" ).append(successMessage('Email enviado'));
+                    }).fail(function( jqxhr, textStatus, error ) {
+                    console.log( "error" );
+                    $( "#mailBox" ).append(alertMessage('Não pode ser enviado o email'));
+                });
+            }
+        }
+
+
+
+        function refreshContainer(currentPage,item) {
+            if ( currentPage == 'home' ) {
+                loadMailForm(item);
+            }
+        }
+
+        function setContainerHtml(html) {
+            document.getElementById('container').innerHTML = html;
+        }
+
+        function refreshNavbarNav(currentPage) {
+            document.getElementById("navbarNav").innerHTML = navBar(currentPage);
+        }
+    </script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Kroton SC - Software Center</a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+    </div>
+</nav>
+<div class="container" id="container">
+</div>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script   src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script type="text/javascript">
+    var url = window.location.href;
+    $( document ).ready(function() {
+        refreshPage('home','');
+    });
+</script>
+</body>
+</html>
