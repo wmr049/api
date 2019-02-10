@@ -42,4 +42,6 @@ spec:
         ports:
         - containerPort: 8080
           protocol: TCP
-
+        env:
+        - name: STORAGE_SERVICE_URL
+          value: "http://storage-service.default.svc.cluster.local/"
