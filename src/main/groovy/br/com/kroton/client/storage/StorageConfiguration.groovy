@@ -9,7 +9,7 @@ import io.micronaut.context.annotation.Requires
 @Requires(property = StorageConfiguration.PREFIX)
 class StorageConfiguration{
     public static final String PREFIX = "ksms"
-    public static final String ID = "http://localhost:8084"
+    public static final String ID = "http://storage-service"
 
     String apiversion
     String organization
