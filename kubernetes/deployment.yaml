@@ -4,44 +4,32 @@ metadata:
   name: api-gateway
   labels:
     app: api-gateway
+    version: "1.1"
+    visualize: "true"
   namespace: default
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: api-gateway
-  strategy:
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
-    type: RollingUpdate
+      version: "1.2"
+      serving: "true"  
   template:
     metadata:
       labels:
         app: api-gateway
-    spec:
-      affinity:
-        nodeAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 1
-            preference:
-              matchExpressions:
-              - key: lifecycle
-                operator: In
-                values:
-                - Ec2Spot
-      tolerations:
-      - key: "spotInstance"
-        operator: "Equal"
-        value: "true"
-        effect: "PreferNoSchedule"
+        version: "1.2"
+        serving: "true"
+        visualize: "true"
+      annotations:
+        visualizer/uses: storage-service,redis
+    spec:   
       containers:
-      - image: ksms/api-gateway:latest
-        imagePullPolicy: Always
-        name: api-gateway
+      - name: api-gateway
+        image: ksms/api-gateway:1.2
+        env:
+          - name: BACKEND_STORAGE_SERVICE_URL
+            value: http://storage-service
         ports:
         - containerPort: 8080
-          protocol: TCP
-        env:
-        - name: STORAGE_SERVICE_URL
-          value: "http://storage-service.default.svc.cluster.local/"
+          name: http        

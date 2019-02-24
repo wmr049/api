@@ -10,7 +10,7 @@ import io.micronaut.context.annotation.Requires
 @Requires(property = MailConfiguration.PREFIX)
 class MailConfiguration {
     public static final String PREFIX = "ksms"
-    public static final String ID = "messenger-service"
+    public static final String ID = "http://messenger-service"
 
     String apiversion
     String organization
