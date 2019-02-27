@@ -24,9 +24,9 @@ class HelloWorldController {
         this.helloClient = helloClient
     }
 
-    @Get('/')
+    @Get('/name')
     @ContinueSpan
-    HttpResponse download(String name){
+    HttpResponse name(String name){
         def result = helloClient.hello(name)
     }
 }

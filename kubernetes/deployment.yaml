@@ -4,7 +4,7 @@ metadata:
   name: api-gateway
   labels:
     app: api-gateway
-    version: "1.1"
+    version: "1.0"
     visualize: "true"
   namespace: default
 spec:
@@ -12,24 +12,24 @@ spec:
   selector:
     matchLabels:
       app: api-gateway
-      version: "1.2"
+      version: "1.0"
       serving: "true"  
   template:
     metadata:
       labels:
         app: api-gateway
-        version: "1.2"
+        version: "1.0"
         serving: "true"
         visualize: "true"
       annotations:
-        visualizer/uses: storage-service,redis
+        visualizer/uses: helloworld-service,storage-service,redis
     spec:   
       containers:
       - name: api-gateway
-        image: ksms/api-gateway:1.2
+        image: ksms/api-gateway:1.0
         env:
           - name: BACKEND_STORAGE_SERVICE_URL
-            value: http://storage-service
+            value: http://storage-service:8084
         ports:
         - containerPort: 8080
           name: http        
