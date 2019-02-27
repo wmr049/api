@@ -8,6 +8,6 @@ import io.micronaut.http.client.annotation.Client
 @CompileStatic
 @Client(StorageConfiguration.ID)
 interface StorageClient{
-    @Post('/v1/storage/download')
+    @Post('/storage/download')
     HttpResponse download(String bucket, String name)
 }
