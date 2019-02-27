@@ -6,7 +6,7 @@ plugins {
 apply plugin:"application"
 apply plugin:"groovy"
 
-version "1.0"
+version "0.1"
 group "br.com.kroton"
 
 repositories {
